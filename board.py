@@ -3,6 +3,9 @@ from typing import Iterator, List, Callable
 from ship import Ship
 import sys
 
+class MoveError(Exception):
+    ...
+
 class Board(object):
 
     def __init__(self, rows, cols):
@@ -32,9 +35,10 @@ class Board(object):
 
 
     def place_ship(self):
-        if self.place_ship_orient() == 'horizontal':
+        ship_orient = self.place_ship_orient()
+        if ship_orient == 'horizontal':
             pass
-        elif self.place_ship_orient() == 'vertical':
+        elif ship_orient == 'vertical':
             pass
         # alright get all these answers
         # validate
@@ -42,7 +46,7 @@ class Board(object):
         # exit loop
         ...
 
-    @staticmethod
+
     def place_ship_orient(self) -> str:
         # ship orientation: horizontal or vertical
         while True:
@@ -70,20 +74,20 @@ class Board(object):
             )
             try:
                 row, col = ship_location.split(',')
-            except ValueError:
-                raise UhOh(
+            except:
+                print(
                     f"{ship_location} is not in the right format 'row, col'"
                 )
             try:
                 row = int(row)
-            except ValueError:
-                raise UhOh(
+            except:
+                print(
                     f'{row} is not an integer'
                 )
             try:
                 col = int(col)
-            except ValueError:
-                raise UhOh(
+            except:
+                print(
                     f'{col} is not an integer'
                 )
             return row, col
@@ -108,6 +112,9 @@ class Board(object):
         # if board.ship.size is 0 then u lose
         ...
 
+    def is_in_bounds(self, row: int, col: int) ->bool:
+        return (0 <= row < self.rows and
+                0 <= col < self.cols)
 
 if __name__ == '__main__':
     test = Board(5,5)

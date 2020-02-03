@@ -2,15 +2,23 @@ from typing import Iterable, TypeVar
 import sys
 from player import Player
 from board import Board
+from ship import Ship
 
 T = TypeVar('T')
 
 class Game(object):
 
-    def __init__(self):
-        self.turn = Player.turn(self)
+    def __init__(self, dim):
+        #self.turn = Player.turn(self, board)
+        #self.board = self.open_coords_configs()
+        self.board = self.open_coords_configs()
+        self.players = []
+        for player_num in range(2):
+            self.players.append(Player(self.players))
+        self._cur_player_turn = 0
 
         ...
+
 
     def open_coords_configs(filepath = sys.argv[1]):
         with open(sys.argv[1]) as fil:
@@ -20,39 +28,83 @@ class Game(object):
             return player_board.display_board()
 
 
+    '''
     def open_ship_configs(filepath = sys.argv[1]):
+        ship_name_list = []
+        ship_length_list = []
         with open(sys.argv[1]) as fil:
             all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
-            for i in all_these_ships:
-                ship_name, ship_length = i[0], i[1]
-                return ship_name, ship_length
+
+            ship_names, ship_lengths = zip(*all_these_ships)
+
+            for name in ship_names:
+                ship_name_list.append(name)
+            #print(ship_name_list)
+
+            for length in ship_lengths:
+                ship_length_list.append(length)
+            #print(ship_length_list)
+
+            for i, name in enumerate(ship_name_list):
+                print(name, i)
+
+            return ship_name_list, ship_length_list
+    '''
+
+            
+    '''
+    def attain_ships(self):
+        sdfas = self.open_ship_configs()
+        print(sdfas)
+        #for ship_name, ship_length in sdfas:
+            #player_ships = Ship(ship_name, ship_length)
+            #return player_ships.ship_name()
+    '''
 
     def setup(self):
-        '''
-        opening and parsing files -> rows/cols, and ship name/ship length
-
-        with open(sys.argv[1]) as fil:
-            for line in fil.readlines()[:1]:
-                num_rows, num_cols = line[0], line[1]
-            all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
-            for i in all_these_ships:
-                ship_name, ship_length = i[0], i[1]
-
-        '''
-
-        self.open_coords_configs()
-        self.open_ship_configs()
-        self.get_players()
-        self.turn
+        #self.turn()
+        #self.open_coords_configs()
+        #self.open_ship_configs()
+        #self.attain_ships()
+        #self.get_players()
         ...
 
     def get_players(self):
-        self.Player.get_player_name()
+        # self.players starts as an empty list, then for i in range(2): we append each player to our list
+        our_players = [Player(self.players) for i in self.players]
+
+        name_player_map = {}
+
+        for index, i in enumerate(our_players):
+            if index == 0:
+                name_player_map[i] = 1
+            elif index == 1:
+                name_player_map[i] = 2
+        return name_player_map
+
         ...
 
+
+    def change_turn(self) -> None:
+        self._cur_player_turn = (self._cur_player_turn + 1) % 2
+
+
+    @property
+    def cur_player(self) -> "Player":
+        return self.players[self._cur_player_turn]
+
+
     def play(self):
+        #self.open_coords_configs()
         while not self.gameover():
-            Player.turn(self)
+            self.cur_player.turn(self.board)
+            self.change_turn()
+
+        self.change_turn()
+
+            #self.open_ship_configs()
+            #Player.turn(self)
+            #self.cur_player.take_turn(self.board)
         ...
 
     def win(self):
@@ -62,6 +114,7 @@ class Game(object):
         return self.win()
 
 if __name__ == '__main__':
-    test = Game()
+    #board = Board(5, 5)
+    test = Game(5)
 
-    print(test.setup())
+    print(test.play())

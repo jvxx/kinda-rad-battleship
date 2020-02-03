@@ -5,46 +5,30 @@ from typing import Iterable, TypeVar
 class Ship(object):
 
     def __init__(self, name, length):
+        #self.name = self.ship_name(name)
+        #self.health = self.ship_health_points(length)
+        self.name = name
+        self.length = length
         ...
 
-    def ship_health_points(self, ship_length):
-        hp = len(ship_length)
+    def ship_name(self):
+        return self.name
+        ...
+
+    def ship_health_points(self):
+        hp = self.length
         if self.hit():
             hp -= 1
+        return hp
         ...
 
     def hit(self):
         ...
 
+if __name__ == '__main__':
+    test = Ship('dumb', 5)
+
+    print(test.ship_name())
 
 
-
-
-
-
-
-'''
-    def __init__(self, ship_name: str, ship_length: int) -> None:
-        self.ShipName = ship_name
-        self.ShipLength = ship_length
-
-    def ship_name(self):
-        with open(sys.argv[1]) as fil:
-            all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
-            for i in all_these_ships:
-                name, length = i[0], i[1]
-            return name
-
-    def ship_length(self):
-        with open(sys.argv[1]) as fil:
-            all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
-            for i in all_these_ships:
-                name, length = i[0], i[1]
-            return length
-
-        #return ship_name, ship_length
-
-    # def ship_length(self, *args):
-    # pass
-
-'''
+    #test.place_ship_orient('nes')
