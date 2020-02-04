@@ -9,7 +9,25 @@ class Ship(object):
         #self.health = self.ship_health_points(length)
         self.name = name
         self.length = length
+        self.health = self.ship_health_points()
         ...
+
+    def ship_size(self):
+        ship_name_list = []
+        ship_length_list = []
+        with open(sys.argv[1]) as fil:
+            all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
+
+            ship_names, ship_lengths = zip(*all_these_ships)
+
+            for name in ship_names:
+                ship_name_list.append(name)
+            # print(ship_name_list)
+
+            for length in ship_lengths:
+                ship_length_list.append(length)
+            # print(ship_length_list)
+            return ship_name_list, ship_length_list
 
     def ship_name(self):
         return self.name
@@ -23,12 +41,9 @@ class Ship(object):
         ...
 
     def hit(self):
+        '''
+        if input coords
+        :return:
+        '''
         ...
 
-if __name__ == '__main__':
-    test = Ship('dumb', 5)
-
-    print(test.ship_name())
-
-
-    #test.place_ship_orient('nes')

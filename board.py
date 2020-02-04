@@ -3,106 +3,51 @@ from typing import Iterator, List, Callable
 from ship import Ship
 import sys
 
-class MoveError(Exception):
-    ...
 
 class Board(object):
 
-    def __init__(self, rows, cols):
-        self.rows = int(rows)
-        self.cols = int(cols)
-        #self.ships = shipList
-        ...
+    def __init__(self, rows: int, cols: int, blank_char: str) -> None:
+        self.blank_char = blank_char
+        self.contents = [[blank_char for col in range(rows)] for row in range(cols)]
+        #self.blank_char = blank_char
 
-    def create_board(self):
-        board = []
-        for row in range(self.rows + 1):
-            row = []
-            for col in range(self.cols + 1):
-                row.append('*')
-            board.append(row)
-        return board
+    @property
+    def rows(self) -> int:
+        return len(self.contents)
 
+    @property
+    def cols(self) -> int:
+        return len(self[0])
 
-    def display_board(self):
-        board = self.create_board()
-        cols = self.cols + 1
-        row_name = '01234567891011'[:cols]
-        print('  ' + ' '.join(row_name) + '')
-        for num, row in enumerate(board):
-            print(num, '*', ' '.join(row[1:]))
+    def __str__(self) -> str:
+        sep = ' ' * max([len(str(self.rows)), len(str(self.cols))])
 
+        rep = sep * 2 + sep.join((str(i) for i in range(self.cols))) + '\n'
 
+        for row_index, row in enumerate(self):
+            rep += str(row_index) + sep + sep.join(row) + '\n'
+        return rep
 
-    def place_ship(self):
-        ship_orient = self.place_ship_orient()
-        if ship_orient == 'horizontal':
-            pass
-        elif ship_orient == 'vertical':
-            pass
-        # alright get all these answers
-        # validate
-        # place ship
-        # exit loop
-        ...
+    def __iter__(self) -> Iterator[List[str]]:
+        return iter(self.contents)
 
+    def __getitem__(self, index: int) -> List[str]:
+        return self.contents[index]
 
-    def place_ship_orient(self) -> str:
-        # ship orientation: horizontal or vertical
-        while True:
-            ship_orientation = input(
-                f'{self} how do you want your ship: vertical or horizontal?: '
-            )
-            if ship_orientation in "horizontal":
-                return ship_orientation
+    def is_in_bounds(self, row: int, col: int) -> bool:
+        return (0 <= row < self.rows and
+                0 <= col < self.cols)
 
-            elif ship_orientation in "vertical":
-                return ship_orientation
-
-            else:
-                print(
-                    f'{ship_orientation} is not horizontal or vertical, bro'
-                )
-
-
-    @staticmethod
-    def place_ship_location(self):
-        # ship location: x, y coordinates
-        while True:
-            ship_location = input(
-                f'{self} where do you want your ship in row, col?: '
-            )
-            try:
-                row, col = ship_location.split(',')
-            except:
-                print(
-                    f"{ship_location} is not in the right format 'row, col'"
-                )
-            try:
-                row = int(row)
-            except:
-                print(
-                    f'{row} is not an integer'
-                )
-            try:
-                col = int(col)
-            except:
-                print(
-                    f'{col} is not an integer'
-                )
-            return row, col
-
-        ...
 
     def shoot(self):
         # prompt
         # validate
         # board look up
-            # board look up if * X O then miss
-            # else ship look up
-            # ship..hit
-            # place X
-            # check win
+        # board look up if * X O then miss
+        # else ship look up
+        # ship..hit
+        # place X
+        # check win
         ...
 
     def check_any_wins(self):
@@ -112,26 +57,41 @@ class Board(object):
         # if board.ship.size is 0 then u lose
         ...
 
-    def is_in_bounds(self, row: int, col: int) ->bool:
-        return (0 <= row < self.rows and
-                0 <= col < self.cols)
+    def place_the_damn_ship(self, row, col):
+        if not self.is_in_bounds(row, col):
+            print(f'{row}, {col} is not in bounds')
+        else:
+            print('no')
 
-if __name__ == '__main__':
-    test = Board(5,5)
-
-    print(test.display_board())
-
-
-    test.place_ship_orient('nes')
 
 '''
-while True:
-    ship_orientation = input(
-        f'how do you want your ship: vertical or horizontal?: '
-    ).strip()
+MY COOL GRID THAT CANNOT BE USED :(
+    
+    self.rows = rows
+    self.cols = cols
+    
+    def _create_empty_contents(self, blank_char):
+        empty_contents = []
+        for row in range(self.rows):
+            row = []
+            for col in range(self.cols):
+                row.append(blank_char)
+            empty_contents.append(row)
+        return empty_contents
+        
+    def display_board(self):
+        # board = self._create_empty_contents()
+        board = self.contents
+        cols = self.cols + 1
 
-    if ship_orientation not in ['horizontal', 'vertical']:
-        print('bruh')
-    else:
-        print('nice')
-    '''
+        c_list = []
+        for c in range(cols+1):
+            c = str(c)
+            c_list.append(c)
+        nums = ''.join(c_list)
+
+        row_name = nums[:cols]
+        print('  ' + ' '.join(row_name) + '')
+        for num, row in enumerate(board):
+            print(num, '*', ' '.join(row[1:]))
+'''

@@ -2,21 +2,23 @@ import sys
 from typing import Iterable
 from board import Board
 from move import Move
-from ship import Ship
-
-
-class MoveError(Exception):
-    ...
 
 
 class Player(object):
-    def __init__(self, other_players: Iterable["Player"]) -> None:
+    def __init__(self, other_players: Iterable["Player"], row, col, blank_char: str = '*') -> None:
+        self.row = row
+        self.col = col
+        self.blank_char = blank_char
+        self.board = Board(row, col, blank_char)
         self.name = self.get_player_name(other_players)
         self.ship = self.get_player_ship()
-        self.make = Move
+
+        # this returns our Move object
+        self.ship_placement = self.get_ship_placement()
         ...
 
-    def get_player_name(self, other_players: Iterable['Player']) -> str:
+    @staticmethod
+    def get_player_name(other_players: Iterable['Player']) -> str:
         taken_names = set([player.name for player in other_players])
         while True:
             name = input("What's your name?: ")
@@ -25,7 +27,8 @@ class Player(object):
             else:
                 print(f'{name} is taken. You should choose a more original name.')
 
-    def get_player_ship(other_players: Iterable['Player']):
+
+    def get_player_ship(self):
         ship_name_list = []
         ship_length_list = []
         with open(sys.argv[1]) as fil:
@@ -41,129 +44,98 @@ class Player(object):
                 ship_length_list.append(length)
             # print(ship_length_list)
             return ship_name_list, ship_length_list
-    '''
-    def place_ship(self):
-        ship_name_list = self.get_player_ship()
-        print(ship_name_list)
-        for i, name in enumerate(ship_name_list):
-            place_ship = input(f'where do you want to place your {name} ship in row, col?: ')
-
-            try:
-                row, col = place_ship.split(',')
-            except:
-                print(f'{place_ship} is not in the form row, col')
-
-            try:
-                row = int(row)
-            except:
-                print(f'row needs to be an integer. {row} is not an integer')
-
-            try:
-                col = int(col)
-            except:
-                print(f'col needs to be an integer. {col} is not an integer')
-
-            return row, col
-
-            # print(name, i)
-
-        # return ship_name_list, ship_length_list
-        '''
-
-    #def place_ship(self):
-        #for ship in self.ship[0]:
-            #print(ship)
-            # Board.place_ship(ship)
 
 
-
-
-    def turn(self, board: 'board.Board'):
-        while True:
-            try:
-                move = self.get_move()
-                move.make(board)
-            except:
-                print(f"you can't make that move")
-
-    def get_move(self) -> "Move":
-        ship_name_list = self.get_player_ship()
+    def get_ship_placement(self) -> "Move":
+        ship_name_list = self.get_player_ship()[0]
         #print(ship_name_list)
-        for i, names in enumerate(ship_name_list):
-            for name in names:
-                place_ship = input(f'where do you want to place your {name} ship in row, col?: ')
 
+        # whoops it keeps looping back
+        ship_size = self.get_ship_parameters()[0]
+        ship_name = self.get_ship_parameters()[1]
+
+        ship_coords_dict = {}
+
+        for name in ship_name_list:
+            place_ship = input(f'{self} where do you want to place your {name} ship in row, col?: ')
+
+            valid_input = 0
+
+            while valid_input < 3:
+                valid_input = 0
                 try:
                     row, col = place_ship.split(',')
+                    valid_input += 1
                 except:
                     print(f'{place_ship} is not in the form row, col')
+                    break
 
                 try:
                     row = int(row)
+                    valid_input += 1
                 except:
-                    print(f'row needs to be an integer. {row} is not an integer')
+                    print(f'row needs to be an integer. that is not an integer')
+                    break
 
                 try:
                     col = int(col)
+                    valid_input += 1
                 except:
-                    print(f'col needs to be an integer. {col} is not an integer')
+                    print(f'col needs to be an integer. that is not an integer')
+                    break
+            if valid_input == 3:
+                ship_coords_dict[row] = col
 
-            #return row, col
-        #str_move = input(f'{self} enter where you want to play in the form row, col: ')
-        return Move.from_str(self, place_ship)
+            #return ship_coords_dict
+        return Move.from_str(self, ship_coords_dict, ship_name, ship_size)
 
-        '''
-        def take_turn(self, the_board: "Board") -> None:
-            while True:
-                try:
-                    move = self.get_move()
-                    move.make(the_board)
-                    return
-                except MoveError as error:
-                    print(error)
 
-        def get_move(self) -> "Move":
-            str_move = input(f'{self} enter where you want to play in the form row, col: ')
-            return Move.from_str(self, str_move)
-        
-        # def turn(self):
-        # while True:
-        # print(self.board)
-        # self.shoot
-        # self.did_i_win
+    def get_ship_parameters(self):
+        ship_name_list = self.get_player_ship()[0]
+        ship_length_list = self.get_player_ship()[1]
+
+        for length in ship_length_list:
+            ship_size = length
+        for name in ship_name_list:
+            ship_name = name
+
+        return ship_size, ship_name
+
+    def __str__(self) -> str:
+        # convert player name from generator -> str
+        return self.name
+
+    def get_player_board(self):
+        print(self.board)
         ...
-    '''
 
-'''
-idk how the move class works 
 
-    def turn(self, player_board: "Board") -> None:
+    def initial_turn(self, board: 'Board', row, col) -> None:
         while True:
             try:
-                move = self.get_move()
-                move.make(player_board)
-                return
-            except MoveError as error:
-                print(error)
+                # from ship placement we get the Move class back
+                # cls(maker, rol, col, name, length)
 
-    def get_move(self) -> "Move":
-        str_move = input(f'{self} enter where you want to play in the form row, col: ')
+                # now we get a list of ship coords back
+                move = self.get_ship_placement()
+                #move.place_the_damn_ship()
+                # move is the class move.Move
+                move.make(board)
+                move.place_ship_orient()
+                move.check_ship(row, col)
+                move.place_ship()
+                return
+            except:
+                print(f"you can't make that move")
+
+    def get_move(self) -> 'Move':
+        str_move = self.ship_placement
         return Move.from_str(self, str_move)
 
 
-    def whats_the_move(self):
-        while True:
-            where_to_shoot = input(
-                "where we droppin' bois? enter in row, col format: "
-            )
-        ...
-
-    def __str__(self) -> str:
-        return self.name
-'''
-
-if __name__ == '__main__':
-    board = Board(5, 5)
-    test = Player('nes', 5, 5)
-
-    print(test.get_player_board())
+    def place_all_ships(self):
+        '''
+        for each_ship in ships:
+            board.place_the_damn_ship()
+        :return:
+        '''
