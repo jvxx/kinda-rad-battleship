@@ -11,24 +11,6 @@ class Move(object):
         self.col = col
         self.ship = Ship(name, length)
 
-
-    def place_ship_orient(self) -> str:
-        # ship orientation: horizontal or vertical
-        while True:
-            ship_orientation = input(
-                f'{self} how do you want your ship: vertical or horizontal?: '
-            )
-            if ship_orientation in "horizontal":
-                return ship_orientation
-
-            elif ship_orientation in "vertical":
-                return ship_orientation
-
-            else:
-                print(
-                    f'{ship_orientation} is not horizontal or vertical, bro'
-                )
-
     def check_ship(self, row, col):
         ship_orient = self.place_ship_orient()
         ship_length = Ship.ship_size()
@@ -47,12 +29,10 @@ class Move(object):
             if col + ship_length > board_length:
                 for i in range(ship_length):
                     if [row, col+i] != '*':
-                        print('BAD!')
+                        print('STOP THAT!')
                     else:
                         print('nice')
-
-        # alright get all these answers
-        # validate
+        # loop until we get a nice answer
         # place ship
         # exit loop
     def place_ship(self):
@@ -61,8 +41,8 @@ class Move(object):
 
 
     @classmethod
-    def from_str(cls, maker: "player.Player", ship_coords_dict: dict, name: str, length: int) -> "Move":
-        [(row, col)] = ship_coords_dict.items()
+    def from_str(cls, maker: "player.Player", place_ship_inp: str, name_list: list, length_list: list) -> "Move":
+
         return cls(maker, row, col, name, length)
 
 
@@ -79,4 +59,4 @@ class Move(object):
             print(f"You can't play at {self.row}, {self.col} because someone already played there")
 
         else:
-            the_board[self.row][self.col] = self.maker.ship
+            the_board[self.row][self.col] = self.maker.ship_list

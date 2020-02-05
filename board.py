@@ -7,26 +7,28 @@ import sys
 class Board(object):
 
     def __init__(self, rows: int, cols: int, blank_char: str) -> None:
+        self.rows = rows
+        self.cols = cols
         self.blank_char = blank_char
-        self.contents = [[blank_char for col in range(rows)] for row in range(cols)]
-        #self.blank_char = blank_char
+        self.contents = [[[blank_char for col in range(cols)] for row in range(rows)] for thickness in range(2)]
 
-    @property
-    def rows(self) -> int:
-        return len(self.contents)
+    # @property
+    # def rows(self) -> int:
+    #     return len(self.contents[0])
 
-    @property
-    def cols(self) -> int:
-        return len(self[0])
+    # @property
+    # def cols(self) -> int:
+    #     return len(self[0])
 
     def __str__(self) -> str:
-        sep = ' ' * max([len(str(self.rows)), len(str(self.cols))])
+        space_length = ' ' * max([len(str(self.rows)), len(str(self.cols))])
 
-        rep = sep * 2 + sep.join((str(i) for i in range(self.cols))) + '\n'
+        make_empty_grid = space_length * 2 + space_length.join((str(i) for i in range(self.cols))) + '\n'
 
         for row_index, row in enumerate(self):
-            rep += str(row_index) + sep + sep.join(row) + '\n'
-        return rep
+            make_empty_grid += str(row_index) + space_length + space_length.join(row) + '\n'
+
+        return make_empty_grid
 
     def __iter__(self) -> Iterator[List[str]]:
         return iter(self.contents)
@@ -40,12 +42,11 @@ class Board(object):
 
 
     def shoot(self):
-        # prompt
-        # validate
-        # board look up
-        # board look up if * X O then miss
-        # else ship look up
-        # ship..hit
+        fasd = input('{self} where u wanna shoot my dude pls enter in row, col: ')
+        # validate w probably some variation of move.make or even the same thing
+        # * on opponent = miss => O on current
+        # ship name on opponent = hit => X on current
+        # ship.hit
         # place X
         # check win
         ...
@@ -57,11 +58,6 @@ class Board(object):
         # if board.ship.size is 0 then u lose
         ...
 
-    def place_the_damn_ship(self, row, col):
-        if not self.is_in_bounds(row, col):
-            print(f'{row}, {col} is not in bounds')
-        else:
-            print('no')
 
 
 '''
