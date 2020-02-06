@@ -6,22 +6,22 @@ from ship import Ship
 import game
 
 class Player(object):
-    def __init__(self, other_players: Iterable["Player"], row, col, blank_char: str = '*') -> None:
+    def __init__(self, other_players: Iterable["Player"], row, col, playerNum,  blank_char: str = '*') -> None:
         self.row = row
         self.col = col
         self.blank_char = blank_char
         self.board = Board(row, col, blank_char)
-        self.name = self.get_player_name(other_players)
+        self.name = self.get_player_name(playerNum, other_players)
         self.ship_list = self.get_player_ship()
         self.ship_placement = self.get_ship_placement()
         ...
 
     @staticmethod
-    def get_player_name(other_players: Iterable['Player']) -> str:
+    def get_player_name(playerNum, other_players: Iterable['Player']) -> str:
         taken_names = set([player.name for player in other_players])
         while True:
             name = input(
-                f"Player 1 please enter your name: "
+                f"Player {playerNum} please enter your name: "
             )
             if name not in taken_names:
                 return name
@@ -53,11 +53,13 @@ class Player(object):
                 f'{self} enter horizontal or vertical for the orientation of {ship.name} which is {ship.length} long: '
             )
             ship_orientation = ship_orientation.lower()
-            if ship_orientation in "horizontal":
+            ship_orientation = ship_orientation.strip()
+
+            if 'horizontal'.startswith(ship_orientation):
                 ship_orientation = 'horizontal'
                 return ship_orientation
 
-            elif ship_orientation in "vertical":
+            elif 'vertical'.startswith(ship_orientation):
                 ship_orientation = 'vertical'
                 return ship_orientation
 
@@ -109,23 +111,24 @@ class Player(object):
         self.initial_player_board()
         for ship in self.ship_list:
             valid_input = 0
-            # horz or vert
-            is_horiz = self.get_ship_orient(ship)
-
             while valid_input < 3:
+                is_horiz = self.get_ship_orient(ship)
                 place_ship = input(
                     f'{self}, enter the starting position for your {ship.name} ship ,which is {ship.length} long, in the form row, column: '
                 )
                 valid_input = 0
+
                 try:
                     row, col = place_ship.split(',')
                     valid_input += 1
                 except:
-                    print(
-                        f'{place_ship} is not in the form x,y'
-                    )
-                    continue
-
+                    if place_ship.isalpha() and len(place_ship) == 1:
+                        continue
+                    else:
+                        print(
+                            f'{place_ship} is not in the form x,y'
+                        )
+                        continue
                 try:
                     row = int(row)
                     valid_input += 1
@@ -150,26 +153,48 @@ class Player(object):
                     if not self.board.is_in_bounds(fake_row, fake_col):
                         valid_input = 0
                         print(
-                            f'Cannot place {ship.name} {is_horiz} at {row}, {col} because it would be out of bounds.'
+                            f'Cannot place {ship.name} {is_horiz}ly at {row}, {col} because it would be out of bounds.'
                         )
                         break
 
                     elif self.board.contents[1][fake_row][fake_col] != '*':
                         valid_input = 0
                         print(
-                            f'Cannot place {ship.name} {is_horiz} at {row}, {col} because it would overlap with overlapping ships.'
+                            f"Cannot place {ship.name} {is_horiz}ly at {row}, {col} because it would overlap with ['{self.board.contents[1][fake_row][fake_col]}']"
                         )
                         break
+
+                    elif is_horiz == 'horizontal':
+                        if col + ship.length > self.board.cols:
+                            valid_input = 0
+                            print(
+                                f'Cannot place {ship.name} {is_horiz}ly at {row}, {col} because it would end up out of bounds.'
+                            )
+                            break
+
+
+                    elif is_horiz == 'vertical':
+                        if row + ship.length > self.board.rows:
+                            valid_input = 0
+                            print(
+                                f'Cannot place {ship.name} {is_horiz}ly at {row}, {col} because it would end up out of bounds.'
+                            )
+                            break
+
+
+
+
 
                     # if is_horiz is True:
                     #     fake_col += 1
                     # else:
                     #     fake_row += 1
-
+                    # else:
                     if is_horiz == 'horizontal':
                         fake_col += 1
                     elif is_horiz == 'vertical':
                         fake_row += 1
+
 
             for ship_length in range(ship.length):
                 self.board.contents[1][row][col] = ship.name[0]
@@ -241,7 +266,13 @@ class Player(object):
                     f'{row}, {col} is not in bounds of our {self.board.rows} X {self.board.cols} board.'
                 )
                 continue
-            elif self.board.contents[0][row][col] == 'X':
+            elif self.board.contents[0
+            ][row][col] == 'X':
+                valid_input = 0
+                print(
+                    f'You have already fired at {row}, {col}.'
+                )
+            elif self.board.contents[0][row][col] == 'O':
                 valid_input = 0
                 print(
                     f'You have already fired at {row}, {col}.'

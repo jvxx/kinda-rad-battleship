@@ -16,8 +16,8 @@ class Game(object):
         # self.board = Board(row, col, blank_char)
         # self.player_board = Player.get_player_board(self)
         self.players = []
-        for player_num in range(2):
-            self.players.append(Player(self.players, row, col, blank_char))
+        for player_num in range(1,3):
+            self.players.append(Player(self.players, row, col, player_num, blank_char))
         self._cur_player_turn = 0
 
         ...
