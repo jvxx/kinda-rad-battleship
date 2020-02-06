@@ -10,8 +10,5 @@ if __name__ == '__main__':
             num_rows = int(num_rows)
             num_cols = int(num_cols)
 
-    #board_dim = 3
-    #if len(sys.argv) >= 2:  # user provided a board dimension
-        #board_dim = sys.argv[1]
     game = Game(num_rows, num_cols)
     game.play()

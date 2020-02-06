@@ -10,9 +10,9 @@ class Ship(object):
         ...
 
 
-    def got_hit(self):
+    def got_hit(self, player):
         self.length -= 1
-        print('u got me!!')
+        print(f"You hit {player}'s {self.name}!")
         if self.length == 0:
-            print(f'you sunk {self.name} ship!!! :(')
+            print(f"You destroyed {player}'s {self.name}")
 

@@ -41,25 +41,6 @@ class Board(object):
                 0 <= col < self.cols)
 
 
-    def shoot(self):
-        fasd = input('{self} where u wanna shoot my dude pls enter in row, col: ')
-        # validate w probably some variation of move.make or even the same thing
-        # * on opponent = miss => O on current
-        # ship name on opponent = hit => X on current
-        # ship.hit
-        # place X
-        # check win
-        ...
-
-    def check_any_wins(self):
-        # if ship hp = 0
-        # then print ship sank
-        # and remove ship from list
-        # if board.ship.size is 0 then u lose
-        ...
-
-
-
 '''
 MY COOL GRID THAT CANNOT BE USED :(
     
