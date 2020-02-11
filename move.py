@@ -1,11 +1,11 @@
-import player
+import humanplayer
 import board
 from ship import Ship
 
 
 
 class Move(object):
-    def __init__(self, maker: "player.Player", row: int, col: int, name: str, length: int) -> None:
+    def __init__(self, maker: "humanplayer.Player", row: int, col: int, name: str, length: int) -> None:
         self.maker = maker
         self.row = row
         self.col = col
@@ -41,7 +41,7 @@ class Move(object):
 
 
     @classmethod
-    def from_str(cls, maker: "player.Player", place_ship_inp: str, name_list: list, length_list: list) -> "Move":
+    def from_str(cls, maker: "humanplayer.Player", place_ship_inp: str, name_list: list, length_list: list) -> "Move":
 
         return cls(maker, row, col, name, length)
 

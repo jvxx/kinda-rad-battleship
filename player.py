@@ -3,7 +3,7 @@ from typing import Iterable
 from board import Board
 from ship import Ship
 
-
+#bobalicious
 class Player(object):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         self.row = row
