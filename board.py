@@ -1,7 +1,4 @@
-import typing
-from typing import Iterator, List, Callable
-from ship import Ship
-import sys
+from typing import Iterator, List
 
 
 class Board(object):
@@ -11,14 +8,6 @@ class Board(object):
         self.cols = cols
         self.blank_char = blank_char
         self.contents = [[[blank_char for col in range(cols)] for row in range(rows)] for thickness in range(2)]
-
-    # @property
-    # def rows(self) -> int:
-    #     return len(self.contents[0])
-
-    # @property
-    # def cols(self) -> int:
-    #     return len(self[0])
 
     def __str__(self) -> str:
         space_length = ' ' * max([len(str(self.rows)), len(str(self.cols))])
@@ -39,36 +28,3 @@ class Board(object):
     def is_in_bounds(self, row: int, col: int) -> bool:
         return (0 <= row < self.rows and
                 0 <= col < self.cols)
-
-
-'''
-MY COOL GRID THAT CANNOT BE USED :(
-    
-    self.rows = rows
-    self.cols = cols
-    
-    def _create_empty_contents(self, blank_char):
-        empty_contents = []
-        for row in range(self.rows):
-            row = []
-            for col in range(self.cols):
-                row.append(blank_char)
-            empty_contents.append(row)
-        return empty_contents
-        
-    def display_board(self):
-        # board = self._create_empty_contents()
-        board = self.contents
-        cols = self.cols + 1
-
-        c_list = []
-        for c in range(cols+1):
-            c = str(c)
-            c_list.append(c)
-        nums = ''.join(c_list)
-
-        row_name = nums[:cols]
-        print('  ' + ' '.join(row_name) + '')
-        for num, row in enumerate(board):
-            print(num, '*', ' '.join(row[1:]))
-'''

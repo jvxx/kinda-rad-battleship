@@ -1,23 +1,21 @@
 import sys
-import copy
-from typing import Iterable, Iterator
+from typing import Iterable
 from board import Board
 from ship import Ship
-import game
+
 
 class Player(object):
-    def __init__(self, other_players: Iterable["Player"], row, col, playerNum,  blank_char: str = '*') -> None:
+    def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         self.row = row
         self.col = col
         self.blank_char = blank_char
         self.board = Board(row, col, blank_char)
-        self.name = self.get_player_name(playerNum, other_players)
+        self.name = self.get_player_name(player_num, other_players)
         self.ship_list = self.get_player_ship()
         self.ship_placement = self.get_ship_placement()
-        ...
 
     @staticmethod
-    def get_player_name(playerNum, other_players: Iterable['Player']) -> str:
+    def get_player_name(playerNum: int, other_players: Iterable['Player']) -> str:
         taken_names = set([player.name for player in other_players])
         while True:
             name = input(
@@ -30,23 +28,18 @@ class Player(object):
                     f'Someone is already using {name} for their name.\nPlease choose another name.'
                 )
 
-
     def get_player_ship(self):
         ship_list = []
         with open(sys.argv[1]) as fil:
-            #all_these_ships = [list(line.split()) for line in fil.readlines()[1:]]
-
             for s in fil.readlines()[1:]:
                 s = s.split(' ')
                 ship_name = s[0]
                 ship_length = int(s[1])
                 ship_list.append(Ship(ship_name, ship_length))
 
-            #ship_names, ship_lengths = zip(*all_these_ships)
-
             return ship_list
 
-    def get_ship_orient(self, ship) -> bool:
+    def get_ship_orient(self, ship) -> str:
         # ship orientation: horizontal or vertical
         while True:
             ship_orientation = input(
@@ -68,56 +61,60 @@ class Player(object):
                     f'{ship_orientation} does not represent an Orientation'
                 )
 
-    def get_player_board(self):
-        # print(" ", end='')
-        for i in range(2):
-            if i == 0:
-                print(f"{self}'s Scanning Board")
-            elif i == 1:
-                print(f"{self}'s Board")
-            print(" ", end = '')
-            for col_num in range(self.col):
-                print(" " + str(col_num), end = '')
-            print()
-            for row_num in range(self.row):
-                print(row_num, end = '')
-                for col_num in range(self.col):
-                    print(" " + self.board.contents[i][row_num][col_num], end = '')
-                print()
-            print()
-
-
     def initial_player_board(self):
-        # print(" ", end='')
+        # for placing ships
         for i in range(2):
             if i == 0:
                 pass
             elif i == 1:
                 print(f"{self.name}'s Placement Board")
-                print(" ", end = '')
+                print(" ", end='')
                 for col_num in range(self.col):
-                    print(" " + str(col_num), end = '')
+                    print(" " + str(col_num), end='')
                 print()
                 for row_num in range(self.row):
-                    print(row_num, end = '')
+                    print(row_num, end='')
                     for col_num in range(self.col):
-                        print(" " + self.board.contents[i][row_num][col_num], end = '')
+                        print(" " + self.board.contents[i][row_num][col_num], end='')
                     print()
 
-
+    def get_player_board(self):
+        # for shooting ships
+        for i in range(2):
+            if i == 0:
+                print(f"{self}'s Scanning Board")
+            elif i == 1:
+                print(f"{self}'s Board")
+            print(" ", end='')
+            for col_num in range(self.col):
+                print(" " + str(col_num), end='')
+            print()
+            for row_num in range(self.row):
+                print(row_num, end='')
+                for col_num in range(self.col):
+                    print(" " + self.board.contents[i][row_num][col_num], end='')
+                print()
+            print()
 
     def get_ship_placement(self):
         # WE NEED THE PLACEMENT BOARD HERE
         self.initial_player_board()
+
+        # iterate through ship list and place each ship
         for ship in self.ship_list:
             valid_input = 0
             while valid_input < 3:
+
+                # retrieve orientation of the ship
                 is_horiz = self.get_ship_orient(ship)
                 place_ship = input(
                     f'{self}, enter the starting position for your {ship.name} ship ,which is {ship.length} long, in the form row, column: '
                 )
+
+                # to track if each requirement is met for a valid input
                 valid_input = 0
 
+                # determine validity of user input of coordinates
                 try:
                     row, col = place_ship.split(',')
                     valid_input += 1
@@ -147,6 +144,7 @@ class Player(object):
                     )
                     continue
 
+                # to check if each and every coordinate the ship will be on is valid
                 fake_col = col
                 fake_row = row
                 for ship_length in range(ship.length):
@@ -181,21 +179,20 @@ class Player(object):
                             )
                             break
 
-
-
-
-
                     # if is_horiz is True:
                     #     fake_col += 1
                     # else:
                     #     fake_row += 1
                     # else:
+
+                    # incrementing by 1 to check every coordinate the ship will be on
                     if is_horiz == 'horizontal':
                         fake_col += 1
                     elif is_horiz == 'vertical':
                         fake_row += 1
 
-
+            # once all the coordinates and placements are confirmed to be valid,
+            # place the ship's initials to mark the ship on the board
             for ship_length in range(ship.length):
                 self.board.contents[1][row][col] = ship.name[0]
                 if is_horiz == 'horizontal':
@@ -205,9 +202,13 @@ class Player(object):
 
             self.initial_player_board()
 
+    def shoot(self, row: int, col: int) -> bool:
+        # this is checking the board of the player who's being shot at (ie not the player in the current turn)
 
-
-    def shoot(self, row, col) -> bool:
+        # check if the coordinates contains a ship,
+        # and return False if there is no ship
+        # if there is a ship,
+        # look up which ship the initials correspond to, mark an X, and return True
         if self.board.contents[1][row][col] == '*':
             self.board.contents[1][row][col] = 'O'
             return False
@@ -223,7 +224,6 @@ class Player(object):
                     ship.got_hit(self.name)
                     return True
 
-
     def turn(self, other_player):
         self.get_player_board()
         valid_input = 0
@@ -231,6 +231,7 @@ class Player(object):
             valid_input = 0
             shoot_me = input(f'{self}, enter the location you want to fire at in the form row, column: ')
 
+            # check validity of shooting coordinates format
             try:
                 row, col = shoot_me.split(',')
                 valid_input += 1
@@ -257,17 +258,15 @@ class Player(object):
                     f'Column should be an integer. {col} is NOT an integer.'
                 )
                 continue
-            #
-            # for ship in self.ship_list:
-            #     for ship_length in range(ship.length):
+
+            # check validity of coordinates
             if not self.board.is_in_bounds(row, col):
                 valid_input = 0
                 print(
                     f'{row}, {col} is not in bounds of our {self.board.rows} X {self.board.cols} board.'
                 )
                 continue
-            elif self.board.contents[0
-            ][row][col] == 'X':
+            elif self.board.contents[0][row][col] == 'X':
                 valid_input = 0
                 print(
                     f'You have already fired at {row}, {col}.'
@@ -278,9 +277,9 @@ class Player(object):
                     f'You have already fired at {row}, {col}.'
                 )
 
-
         hit = other_player.shoot(row, col)
 
+        # mark scanning boards accordingly
         if hit:
             self.board.contents[0][row][col] = 'X'
         else:
@@ -288,10 +287,7 @@ class Player(object):
             print('Miss')
 
         self.get_player_board()
-        ...
-
 
     def __str__(self) -> str:
         # convert player name from weird object thing to str
         return self.name
-
