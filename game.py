@@ -1,4 +1,4 @@
-from player import Player
+from humanplayer import HumanPlayer
 
 
 class Game(object):
@@ -9,14 +9,14 @@ class Game(object):
         # self.player_board = Player.get_player_board(self)
         self.players = []
         for player_num in range(1, 3):
-            self.players.append(Player(self.players, row, col, player_num, blank_char))
+            self.players.append(HumanPlayer(self.players, row, col, player_num, blank_char))
         self._cur_player_turn = 0
 
     def change_turn(self) -> None:
         self._cur_player_turn = (self._cur_player_turn + 1) % 2
 
     @property
-    def cur_player(self) -> "Player":
+    def cur_player(self) -> "HumanPlayer":
         return self.players[self._cur_player_turn]
 
     def play(self):

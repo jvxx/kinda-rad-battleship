@@ -2,21 +2,15 @@ import sys
 from typing import Iterable
 from board import Board
 from ship import Ship
+from player import Player
 
-import abc
 
-class Player(abc.ABC):
+class HumanPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
-        self.row = row
-        self.col = col
-        self.blank_char = blank_char
-        self.board = Board(row, col, blank_char)
-        self.name = self.get_player_name(player_num, other_players)
-        self.ship_list = self.get_player_ship()
-        self.ship_placement = self.get_ship_placement()
+        super().__init__(other_players, row, col, player_num, blank_char)
 
-    @abc.abstractmethod
-    def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
+    @staticmethod
+    def get_player_name(playerNum: int, other_players: Iterable['Player']) -> str:
         taken_names = set([player.name for player in other_players])
         while True:
             name = input(
@@ -28,7 +22,7 @@ class Player(abc.ABC):
                 print(
                     f'Someone is already using {name} for their name.\nPlease choose another name.'
                 )
-    @abc.abstractmethod
+
     def get_player_ship(self):
         ship_list = []
         with open(sys.argv[1]) as fil:
