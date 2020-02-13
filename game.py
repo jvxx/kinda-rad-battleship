@@ -12,11 +12,11 @@ class Game(object):
         # self.player_board = Player.get_player_board(self)
         self.players = []
         for player_num in range(1, 3):
-            self.players.append(Player(self.players, row, col, player_num, blank_char))
+            self.players.append(self.get_player_type(self.players, row, col, player_num, blank_char))
             # self.which_player = Player.get_player_type(player_num)
         self._cur_player_turn = 0
 
-    def get_player_type(self, playerNum: int):
+    def get_player_type(self, players, row, col, playerNum: int, blank_char):
         while True:
             who_are_you = input(
                 f"Enter one of ['Human', 'CheatingAi', 'SearchDestroyAi', 'RandomAi'] for Player {playerNum}'s type: "
@@ -24,9 +24,7 @@ class Game(object):
             who_are_you = who_are_you.lower()
             who_are_you = who_are_you.strip()
             if 'human'.startswith(who_are_you):
-                # print('hi human')
-                who_are_you = 'human'
-                return who_are_you
+                return HumanPlayer(players, row, col, playerNum)
             elif 'cheatingai'.startswith(who_are_you):
                 # print('hey cheater')
                 who_are_you = 'cheatingai'
