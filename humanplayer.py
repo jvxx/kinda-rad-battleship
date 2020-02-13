@@ -9,8 +9,8 @@ class HumanPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
 
-    @staticmethod
-    def get_player_name(playerNum: int, other_players: Iterable['Player']) -> str:
+
+    def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
         taken_names = set([player.name for player in other_players])
         while True:
             name = input(

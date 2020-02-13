@@ -11,34 +11,19 @@ class Player(abc.ABC):
         self.col = col
         self.blank_char = blank_char
         self.board = Board(row, col, blank_char)
+        # self.player_type = self.get_player_type(player_num)
         self.name = self.get_player_name(player_num, other_players)
         self.ship_list = self.get_player_ship()
         self.ship_placement = self.get_ship_placement()
 
+
     @abc.abstractmethod
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
-        taken_names = set([player.name for player in other_players])
-        while True:
-            name = input(
-                f"Player {playerNum} please enter your name: "
-            )
-            if name not in taken_names:
-                return name
-            else:
-                print(
-                    f'Someone is already using {name} for their name.\nPlease choose another name.'
-                )
+        ...
+
     @abc.abstractmethod
     def get_player_ship(self):
-        ship_list = []
-        with open(sys.argv[1]) as fil:
-            for s in fil.readlines()[1:]:
-                s = s.split(' ')
-                ship_name = s[0]
-                ship_length = int(s[1])
-                ship_list.append(Ship(ship_name, ship_length))
-
-            return ship_list
+        ...
 
     def get_ship_orient(self, ship) -> str:
         # ship orientation: horizontal or vertical
