@@ -102,6 +102,7 @@ class HumanPlayer(Player):
 
                 # retrieve orientation of the ship
                 is_horiz = self.get_ship_orient(ship)
+
                 place_ship = input(
                     f'{self}, enter the starting position for your {ship.name} ship ,which is {ship.length} long, in the form row, column: '
                 )

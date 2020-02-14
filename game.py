@@ -1,12 +1,16 @@
+import random
 from player import Player
 from humanplayer import HumanPlayer
 from aiplayer import AIPlayer
 from cheatingai import CheatingAI
+from randomai import RandomAI
+from huntdestroyai import HuntDestroyAI
 
 
 class Game(object):
 
-    def __init__(self, row, col, blank_char: str = '*') -> None:
+    def __init__(self, row, col, random_seed, blank_char: str = '*') -> None:
+        random.seed(random_seed)
         self.row = row
         self.col = col
         # self.player_board = Player.get_player_board(self)
@@ -16,7 +20,7 @@ class Game(object):
             # self.which_player = Player.get_player_type(player_num)
         self._cur_player_turn = 0
 
-    def get_player_type(self, players, row, col, playerNum: int, blank_char):
+    def get_player_type(self, otherPlayers, row, col, playerNum: int, blank_char):
         while True:
             who_are_you = input(
                 f"Enter one of ['Human', 'CheatingAi', 'SearchDestroyAi', 'RandomAi'] for Player {playerNum}'s type: "
@@ -24,19 +28,13 @@ class Game(object):
             who_are_you = who_are_you.lower()
             who_are_you = who_are_you.strip()
             if 'human'.startswith(who_are_you):
-                return HumanPlayer(players, row, col, playerNum)
+                return HumanPlayer(otherPlayers, row, col, playerNum, blank_char)
             elif 'cheatingai'.startswith(who_are_you):
-                # print('hey cheater')
-                who_are_you = 'cheatingai'
-                return who_are_you
+                return CheatingAI(otherPlayers, row, col, playerNum, blank_char)
             elif 'searchdestroyai'.startswith(who_are_you):
-                # print('sup searcher destroyer')
-                who_are_you = 'searchdestroyai'
-                return who_are_you
+                return HuntDestroyAI(otherPlayers, row, col, playerNum, blank_char)
             elif 'randomai'.startswith(who_are_you):
-                # print('haha im so random')
-                who_are_you = 'randomai'
-                return who_are_you
+                return RandomAI(otherPlayers, row, col, playerNum, blank_char)
             else:
                 continue
 
@@ -44,7 +42,7 @@ class Game(object):
         self._cur_player_turn = (self._cur_player_turn + 1) % 2
 
     @property
-    def cur_player(self) -> "Player":
+    def cur_player(self) -> get_player_type:
         return self.players[self._cur_player_turn]
 
 

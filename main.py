@@ -14,6 +14,6 @@ if __name__ == '__main__':
             num_rows = int(num_rows)
             num_cols = int(num_cols)
     # random.seed(sys.argv[2])
-
-    game = Game(num_rows, num_cols)
+    random_seed = int(sys.argv[2])
+    game = Game(num_rows, num_cols, random_seed)
     game.play()
