@@ -126,55 +126,16 @@ class CheatingAI(AIPlayer):
         self.get_player_board()
         row = other_player.row_list.pop(0)
         col = other_player.col_list.pop(0)
-        print(row)
-        print(col)
-        # took_their_coords = other_player.stealin_my_coords()
-        # rad_rows = []
-        # cool_cols = []
-        # for i in took_their_coords:
-        #     row = i[0]
-        #     rad_rows.append(row)
-        #     col = i[1]
-        #     cool_cols.append(col)
-        # rad_rows.pop[0]
-        # took_their_coords.pop([0])
-        # hit = other_player.shoot(row, col)
-        # if hit:
-        #     self.board.contents[0][row][col] = 'X'
-        # else:
-        #     self.board.contents[0][row][col] = 'O'
-        #     print('Miss')
+        # print(row)
+        # print(col)
+        hit = other_player.shoot(row, col)
+        if hit:
+            self.board.contents[0][row][col] = 'X'
+        else:
+            self.board.contents[0][row][col] = 'O'
+            print('Miss')
 
         self.get_player_board()
-
-        # check validity of coordinates
-        # if not self.board.is_in_bounds(row, col):
-        #     valid_input = 0
-        #     print(
-        #         f'{row}, {col} is not in bounds of our {self.board.rows} X {self.board.cols} board.'
-        #     )
-        #     continue
-        # elif self.board.contents[0][row][col] == 'X':
-        #     valid_input = 0
-        #     print(
-        #         f'You have already fired at {row}, {col}.'
-        #     )
-        # elif self.board.contents[0][row][col] == 'O':
-        #     valid_input = 0
-        #     print(
-        #         f'You have already fired at {row}, {col}.'
-        #     )
-
-        # hit = other_player.shoot(row, col)
-        #
-        # # mark scanning boards accordingly
-        # if hit:
-        #     self.board.contents[0][row][col] = 'X'
-        # else:
-        #     self.board.contents[0][row][col] = 'O'
-        #     print('Miss')
-        #
-        # self.get_player_board()
 
     def __str__(self) -> str:
         # convert player name from weird object thing to str
