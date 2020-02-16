@@ -4,7 +4,7 @@ from humanplayer import HumanPlayer
 from aiplayer import AIPlayer
 from cheatingai import CheatingAI
 from randomai import RandomAI
-from huntdestroyai import HuntDestroyAI
+from searchdestroyai import SearchDestroyAI
 
 
 class Game(object):
@@ -32,7 +32,7 @@ class Game(object):
             elif 'cheatingai'.startswith(who_are_you):
                 return CheatingAI(otherPlayers, row, col, playerNum, blank_char)
             elif 'searchdestroyai'.startswith(who_are_you):
-                return HuntDestroyAI(otherPlayers, row, col, playerNum, blank_char)
+                return SearchDestroyAI(otherPlayers, row, col, playerNum, blank_char)
             elif 'randomai'.startswith(who_are_you):
                 return RandomAI(otherPlayers, row, col, playerNum, blank_char)
             else:

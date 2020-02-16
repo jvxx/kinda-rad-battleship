@@ -87,6 +87,7 @@ class RandomAI(AIPlayer):
             row = i[0]
             # row = int(row)
             rad_rows.append(row)
+        rad_rows.sort()
         cur_row = random.choice(rad_rows)
         cur_row = int(cur_row)
         rad_rows.remove(cur_row)
@@ -99,6 +100,7 @@ class RandomAI(AIPlayer):
             col = i[1]
             # col = int(col)
             cool_cols.append(col)
+        cool_cols.sort()
         cur_col = random.choice(cool_cols)
         cur_col = int(cur_col)
         cool_cols.remove(cur_col)
@@ -134,6 +136,7 @@ class RandomAI(AIPlayer):
         # print(row)
         # print(col)
         #
+        # print(row, col)
         hit = other_player.shoot(row, col)
 
         # mark scanning boards accordingly
