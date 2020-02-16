@@ -15,7 +15,7 @@ class CheatingAI(AIPlayer):
         # self.col_list = self.stolen_cols()
 
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
-        name = f"Cheating AI {playerNum}"
+        name = f"Cheating Ai {playerNum}"
         return name
 
     def get_player_ship(self):
@@ -70,7 +70,6 @@ class CheatingAI(AIPlayer):
     def get_ship_placement(self):
         self.initial_player_board()
         super().get_ship_placement()
-        self.initial_player_board()
 
     def stealin_my_coords(self):
         ship_row_coords = []

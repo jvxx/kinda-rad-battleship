@@ -10,7 +10,7 @@ class RandomAI(AIPlayer):
         super().__init__(other_players, row, col, player_num, blank_char)
 
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
-        name = f"Random AI {playerNum}"
+        name = f"Random Ai {playerNum}"
         return name
 
     def get_player_ship(self):

@@ -80,21 +80,12 @@ class AIPlayer(Player):
                         valid_input = 0
                         break
 
-                    elif is_horiz == 'horizontal':
-                        if col + ship.length > self.board.cols:
-                            valid_input = 0
-                            break
-
-                    elif is_horiz == 'vertical':
-                        if row + ship.length > self.board.rows:
-                            valid_input = 0
-                            break
-
                     # incrementing by 1 to check every coordinate the ship will be on
                     if is_horiz == 'horizontal':
                         fake_col += 1
                     elif is_horiz == 'vertical':
                         fake_row += 1
+                valid_input += 1
 
             # once all the coordinates and placements are confirmed to be valid,
             # place the ship's initials to mark the ship on the board
@@ -104,6 +95,7 @@ class AIPlayer(Player):
                     col += 1
                 elif is_horiz == 'vertical':
                     row += 1
+            self.initial_player_board()
 
 
 

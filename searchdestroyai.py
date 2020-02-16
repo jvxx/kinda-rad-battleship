@@ -13,7 +13,7 @@ class SearchDestroyAI(AIPlayer):
         self.col_hitList = []
 
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
-        name = f"Search Destroy AI {playerNum}"
+        name = f"Search Destroy Ai {playerNum}"
         return name
 
     def get_player_ship(self):
