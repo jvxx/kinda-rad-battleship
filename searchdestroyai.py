@@ -6,14 +6,18 @@ from player import Player
 from aiplayer import AIPlayer
 from BattleShip.src import orientation
 
+# command line args: configs/minor_game.txt 542
+
 class SearchDestroyAI(AIPlayer):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
         self.row_hitList = []
         self.col_hitList = []
+        self.hit_this = []
+        self.hit_coords = []
 
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
-        name = f"Search Destroy Ai {playerNum}"
+        name = f"Search Destroy AI {playerNum}"
         return name
 
     def get_player_ship(self):
@@ -132,39 +136,64 @@ class SearchDestroyAI(AIPlayer):
                     ship.got_hit(self.name)
                     return True
 
-    def turn(self, other_player):
-        row_hitList = self.row_hitList
-        col_hitList = self.col_hitList
-        self.get_player_board()
+    '''
+    senf help thank
+    def hit_list(self, row, col):
+        row_hitList = []
+        col_hitList = []
 
-        if row_hitList and col_hitList:
-            print(row_hitList)
+        if self.board.is_in_bounds(row, col - 1): #and row in self.row_list and (col - 1) in self.col_list:
+            self.row_hitList.append(row)
+            self.col_hitList.append(col - 1)
+        if self.board.is_in_bounds(row - 1, col): #and (row - 1) in self.row_list and col in self.col_list:
+            self.row_hitList.append(row - 1)
+            self.col_hitList.append(col)
+        if self.board.is_in_bounds(row, col + 1): #and row in self.row_list and (col + 1) in self.col_list:
+            self.row_hitList.append(row)
+            self.col_hitList.append(col + 1)
+        if self.board.is_in_bounds(row + 1, col): #and (row + 1) in self.row_list and col in self.col_list:
+            self.row_hitList.append(row + 1)
+            self.col_hitList.append(col)
+        hit_coords = list(zip(self.row_hitList, self.col_hitList))
+        # print(hit_coords)
+        return hit_coords
+    '''
+
+    def turn(self, other_player):
+        # row_hitList = self.row_hitList
+        # col_hitList = self.col_hitList
+        # hit_coords = self.hit_this
+        stole_their_coords = self.ship_coords
+        self.get_player_board()
+        if self.hit_coords:
             # return and remove first row element from list
-            cur_row = row_hitList.pop(0)
-            print(row_hitList)
-            row = int(cur_row)
-            print(cur_row)
+            cur_coords = self.hit_coords.pop(0)
+            row = cur_coords[0]
+            col = cur_coords[1]
+            print(row, col)
+            # row = int(cur_row)
             # remove said row element from original list of coords
-            print(self.row_list)
-            self.row_list.remove(cur_row)
-            print(self.row_list)
+            # self.row_list.remove(cur_row)
 
             # return and remove first col element from list
-            cur_col = col_hitList.pop(0)
-            col = int(cur_col)
+            # cur_col = self.hit_this.pop(0)
+            # col = int(cur_col)
             # remove same col element from og list of coords
-            self.col_list.remove(cur_col)
+            # self.col_list.remove(cur_col)
+
+            self.ship_coords.remove(cur_coords)
+            print(self.hit_coords)
 
         else:
-            cur_row = random.choice(self.row_list)
-            row = int(cur_row)
-            self.row_list.remove(cur_row)
-            # print(self.row_list)
+            # stole_their_coords = self.ship_coords
+            cur_coords = random.choice(stole_their_coords)
+            self.ship_coords.remove(cur_coords)
 
-            cur_col = random.choice(self.col_list)
-            col = int(cur_col)
-            self.col_list.remove(cur_col)
-            # print(self.col_list)
+            row = cur_coords[0]
+            col = cur_coords[1]
+            print(row, col)
+
+
 
         hit = other_player.shoot(row, col)
 
@@ -172,19 +201,51 @@ class SearchDestroyAI(AIPlayer):
             #  mark scanning boards accordingly
             self.board.contents[0][row][col] = 'X'
 
+            if self.board.is_in_bounds(row, col - 1) and self.board.contents[0][row][col - 1] == '*':  # and row in self.row_list and (col - 1) in self.col_list:
+                left_coords = (row, col - 1)
+                if left_coords not in self.hit_coords:
+                    self.hit_coords.append(left_coords)
+                # self.row_hitList.append(row)
+                # self.col_hitList.append(col - 1)
+            if self.board.is_in_bounds(row - 1, col) and self.board.contents[0][row - 1][col] == '*':  # and (row - 1) in self.row_list and col in self.col_list:
+                top_coords = (row - 1, col)
+                if top_coords not in self.hit_coords:
+                    self.hit_coords.append(top_coords)
+                # self.row_hitList.append(row - 1)
+                # self.col_hitList.append(col)
+            if self.board.is_in_bounds(row, col + 1) and self.board.contents[0][row][col + 1] == '*':  # and row in self.row_list and (col + 1) in self.col_list:
+                right_coords = (row, col + 1)
+                if right_coords not in self.hit_coords:
+                    self.hit_coords.append(right_coords)
+                # self.row_hitList.append(row)
+                # self.col_hitList.append(col + 1)
+            if self.board.is_in_bounds(row + 1, col) and self.board.contents[0][row + 1][col] == '*':  # and (row + 1) in self.row_list and col in self.col_list:
+                bottom_coords = (row + 1, col)
+                if bottom_coords not in self.hit_coords:
+                    self.hit_coords.append(bottom_coords)
+                # self.row_hitList.append(row + 1)
+                # self.col_hitList.append(col)
+            print(self.hit_coords)
+
+
+
+            # dude = self.hit_list(row, col)
+            # print(dude)
+
+
             # check if in bounds and add coords to hit list
-            if self.board.is_in_bounds(row, col - 1) and row in self.row_list and (col - 1) in self.col_list:
-                row_hitList.append(row)
-                col_hitList.append(col-1)
-            if self.board.is_in_bounds(row - 1, col) and (row - 1) in self.row_list and col in self.col_list:
-                row_hitList.append(row-1)
-                col_hitList.append(col)
-            if self.board.is_in_bounds(row, col + 1) and row in self.row_list and (col + 1) in self.col_list:
-                row_hitList.append(row)
-                col_hitList.append(col + 1)
-            if self.board.is_in_bounds(row + 1, col) and (row + 1) in self.row_list and col in self.col_list:
-                row_hitList.append(row+1)
-                col_hitList.append(col)
+            # if self.board.is_in_bounds(row, col - 1) and row in self.row_list and (col - 1) in self.col_list:
+            #     row_hitList.append(row)
+            #     col_hitList.append(col-1)
+            # if self.board.is_in_bounds(row - 1, col) and (row - 1) in self.row_list and col in self.col_list:
+            #     row_hitList.append(row-1)
+            #     col_hitList.append(col)
+            # if self.board.is_in_bounds(row, col + 1) and row in self.row_list and (col + 1) in self.col_list:
+            #     row_hitList.append(row)
+            #     col_hitList.append(col + 1)
+            # if self.board.is_in_bounds(row + 1, col) and (row + 1) in self.row_list and col in self.col_list:
+            #     row_hitList.append(row+1)
+            #     col_hitList.append(col)
         else:
             self.board.contents[0][row][col] = 'O'
             print('Miss')

@@ -12,7 +12,7 @@ from copy import deepcopy
 class AIPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
-        self.ship_coords = self.stealin_my_coords
+        self.ship_coords = self.stealin_my_coords()
         self.row_list = self.stolen_rows()
         self.col_list = self.stolen_cols()
 

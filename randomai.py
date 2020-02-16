@@ -81,31 +81,31 @@ class RandomAI(AIPlayer):
         # print(ship_coords)
         return ship_coords
 
-    def stolen_rows(self) -> int:
+    def stolen_rows(self):
         took_my_coords = self.stealin_my_coords()
         rad_rows = []
         for i in took_my_coords:
             row = i[0]
-            # row = int(row)
+            row = int(row)
             rad_rows.append(row)
         rad_rows.sort()
-        cur_row = random.choice(rad_rows)
-        cur_row = int(cur_row)
-        rad_rows.remove(cur_row)
-        return cur_row
+        # cur_row = random.choice(rad_rows)
+        # cur_row = int(cur_row)
+        # rad_rows.remove(cur_row)
+        return rad_rows
 
-    def stolen_cols(self) -> int:
+    def stolen_cols(self):
         took_my_coords = self.stealin_my_coords()
         cool_cols = []
         for i in took_my_coords:
             col = i[1]
-            # col = int(col)
+            col = int(col)
             cool_cols.append(col)
         cool_cols.sort()
-        cur_col = random.choice(cool_cols)
-        cur_col = int(cur_col)
-        cool_cols.remove(cur_col)
-        return cur_col
+        # cur_col = random.choice(cool_cols)
+        # cur_col = int(cur_col)
+        # cool_cols.remove(cur_col)
+        return cool_cols
 
 
     def shoot(self, row: int, col: int) -> bool:
@@ -118,10 +118,6 @@ class RandomAI(AIPlayer):
         if self.board.contents[1][row][col] == '*':
             self.board.contents[1][row][col] = 'O'
             return False
-        elif self.board.contents[1][row][col] == 'X':
-            return False
-        elif self.board.contents[1][row][col] == 'O':
-            return False
         else:
             ship_initial = self.board.contents[1][row][col]
             for ship in self.ship_list:
@@ -132,12 +128,27 @@ class RandomAI(AIPlayer):
 
     def turn(self, other_player):
         self.get_player_board()
-        row = other_player.stolen_rows()
-        col = other_player.stolen_cols()
-        # print(row)
-        # print(col)
-        #
+
+        stole_their_coords = self.ship_coords
+        cur_coords = random.choice(stole_their_coords)
+        self.ship_coords.remove(cur_coords)
+
+        row = cur_coords[0]
+        col = cur_coords[1]
+
         # print(row, col)
+
+
+        # im being dumb and the row and col values get duplicated if i separate them lmao
+        # dumb = self.row_list
+        # ugh = self.col_list
+        # row = random.choice(dumb)
+        # col = random.choice(ugh)
+        # print(row, col)
+        #
+        # dumb.remove(row)
+        # ugh.remove(col)
+
         hit = other_player.shoot(row, col)
 
         # mark scanning boards accordingly
