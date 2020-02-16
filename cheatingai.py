@@ -7,6 +7,7 @@ from aiplayer import AIPlayer
 from board import Board
 from coordinates import Coordinates
 
+# command line args: configs/minor_game.txt 75
 
 class CheatingAI(AIPlayer):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:

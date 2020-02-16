@@ -28,15 +28,6 @@ class AIPlayer(Player):
     def stolen_cols(self):
         ...
 
-    def place_ship(self, ship: "Ship") -> None:
-        while True:
-            placement = self.get_ship_placement(ship)
-            try:
-                self.board.place_ship(placement)
-            except ValueError as e:
-                pass
-            else:
-                return
 
     # def get_ship_orient(self, ship) -> str:
     #     # is_horiz = random.randint(0, 1)
@@ -101,30 +92,6 @@ class AIPlayer(Player):
 
 
 
-        '''
-        works - but will overlap :(
-        for ship in self.ship_list:
-            # is_horiz = self.get_ship_orient(ship)
-            is_horiz = 'horizontal' # test for current bc that's returning None. ...
-
-            # for ship_length in range(ship.length):
-            if is_horiz == 'horizontal':
-                row = random.randint(0, self.board.rows - 1)
-                col = random.randint(0, self.board.cols - ship.length)
-                for ship_length in range(ship.length):
-                    if self.board.contents[1][row][col] != '*':
-                        pass
-                        # would overlap with self.board.contents[1][row][col]
-                    self.board.contents[1][row][col] = ship.name[0]
-                    col += 1
-
-            elif is_horiz == 'vertical':
-                for ship_length in range(ship.length):
-                    row = random.randint(0, self.board.rows - ship.length)
-                    col = random.randint(0, self.board.cols - 1)
-                    self.board.contents[1][row][col] = ship.name[0]
-                    row += 1
-        '''
 
         # original starter code from butner
         #

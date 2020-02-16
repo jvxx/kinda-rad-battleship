@@ -68,7 +68,6 @@ class SearchDestroyAI(AIPlayer):
     def get_ship_placement(self):
         self.initial_player_board()
         super().get_ship_placement()
-        self.initial_player_board()
 
     def stealin_my_coords(self):
         ship_row_coords = []
@@ -134,21 +133,29 @@ class SearchDestroyAI(AIPlayer):
                     return True
 
     def turn(self, other_player):
-        # row_hitList = self.row_hitList
-        # col_hitList = self.col_hitList
+        row_hitList = self.row_hitList
+        col_hitList = self.col_hitList
         self.get_player_board()
 
-        while self.row_hitList is True and self.col_hitList is True:
-            cur_row = self.row_hitList.pop(0)
+        if row_hitList and col_hitList:
+            print(row_hitList)
+            # return and remove first row element from list
+            cur_row = row_hitList.pop(0)
+            print(row_hitList)
             row = int(cur_row)
+            print(cur_row)
+            # remove said row element from original list of coords
+            print(self.row_list)
             self.row_list.remove(cur_row)
+            print(self.row_list)
 
-            cur_col = self.col_hitList.pop(0)
+            # return and remove first col element from list
+            cur_col = col_hitList.pop(0)
             col = int(cur_col)
+            # remove same col element from og list of coords
             self.col_list.remove(cur_col)
 
         else:
-
             cur_row = random.choice(self.row_list)
             row = int(cur_row)
             self.row_list.remove(cur_row)
@@ -161,18 +168,23 @@ class SearchDestroyAI(AIPlayer):
 
         hit = other_player.shoot(row, col)
 
-        # mark scanning boards accordingly
         if hit:
+            #  mark scanning boards accordingly
             self.board.contents[0][row][col] = 'X'
-            self.row_hitList.append(row)
-            self.row_hitList.append(row-1)
-            self.row_hitList.append(row)
-            self.row_hitList.append(row+1)
 
-            self.col_hitList.append(col-1)
-            self.col_hitList.append(col)
-            self.col_hitList.append(col+1)
-            self.col_hitList.append(col)
+            # check if in bounds and add coords to hit list
+            if self.board.is_in_bounds(row, col - 1) and row in self.row_list and (col - 1) in self.col_list:
+                row_hitList.append(row)
+                col_hitList.append(col-1)
+            if self.board.is_in_bounds(row - 1, col) and (row - 1) in self.row_list and col in self.col_list:
+                row_hitList.append(row-1)
+                col_hitList.append(col)
+            if self.board.is_in_bounds(row, col + 1) and row in self.row_list and (col + 1) in self.col_list:
+                row_hitList.append(row)
+                col_hitList.append(col + 1)
+            if self.board.is_in_bounds(row + 1, col) and (row + 1) in self.row_list and col in self.col_list:
+                row_hitList.append(row+1)
+                col_hitList.append(col)
         else:
             self.board.contents[0][row][col] = 'O'
             print('Miss')

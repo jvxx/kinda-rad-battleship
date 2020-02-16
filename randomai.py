@@ -5,6 +5,8 @@ from ship import Ship
 from player import Player
 from aiplayer import AIPlayer
 
+# command line args: configs/minor_game.txt 89
+
 class RandomAI(AIPlayer):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
@@ -65,7 +67,6 @@ class RandomAI(AIPlayer):
     def get_ship_placement(self):
         self.initial_player_board()
         super().get_ship_placement()
-        self.initial_player_board()
 
     def stealin_my_coords(self):
         ship_row_coords = []
