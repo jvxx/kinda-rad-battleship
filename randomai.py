@@ -69,6 +69,9 @@ class RandomAI(AIPlayer):
         super().get_ship_placement()
 
     def stealin_my_coords(self):
+        super().stealin_my_coords()
+
+    def random_coords(self):
         ship_row_coords = []
         ship_col_coords = []
 
@@ -81,31 +84,7 @@ class RandomAI(AIPlayer):
         # print(ship_coords)
         return ship_coords
 
-    def stolen_rows(self):
-        took_my_coords = self.stealin_my_coords()
-        rad_rows = []
-        for i in took_my_coords:
-            row = i[0]
-            row = int(row)
-            rad_rows.append(row)
-        rad_rows.sort()
-        # cur_row = random.choice(rad_rows)
-        # cur_row = int(cur_row)
-        # rad_rows.remove(cur_row)
-        return rad_rows
 
-    def stolen_cols(self):
-        took_my_coords = self.stealin_my_coords()
-        cool_cols = []
-        for i in took_my_coords:
-            col = i[1]
-            col = int(col)
-            cool_cols.append(col)
-        cool_cols.sort()
-        # cur_col = random.choice(cool_cols)
-        # cur_col = int(cur_col)
-        # cool_cols.remove(cur_col)
-        return cool_cols
 
 
     def shoot(self, row: int, col: int) -> bool:
@@ -129,7 +108,7 @@ class RandomAI(AIPlayer):
     def turn(self, other_player):
         self.get_player_board()
 
-        stole_their_coords = other_player.ship_coords
+        stole_their_coords = other_player.stealin_my_coords()
         cur_coords = random.choice(stole_their_coords)
         other_player.ship_coords.remove(cur_coords)
 

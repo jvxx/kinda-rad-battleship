@@ -74,6 +74,9 @@ class SearchDestroyAI(AIPlayer):
         super().get_ship_placement()
 
     def stealin_my_coords(self):
+        super().stealin_my_coords()
+
+    def random_coords(self):
         ship_row_coords = []
         ship_col_coords = []
 
@@ -86,33 +89,7 @@ class SearchDestroyAI(AIPlayer):
         # print(ship_coords)
         return ship_coords
 
-    def stolen_rows(self):
-        took_my_coords = self.stealin_my_coords()
-        rad_rows = []
-        for i in took_my_coords:
-            row = i[0]
-            # row = int(row)
-            rad_rows.append(row)
-        rad_rows.sort()
-        # cur_row = random.choice(rad_rows)
-        # cur_row = int(cur_row)
-        # rad_rows.remove(cur_row)
-        # return cur_row
-        return rad_rows
 
-    def stolen_cols(self):
-        took_my_coords = self.stealin_my_coords()
-        cool_cols = []
-        for i in took_my_coords:
-            col = i[1]
-            # col = int(col)
-            cool_cols.append(col)
-        cool_cols.sort()
-        # cur_col = random.choice(cool_cols)
-        # cur_col = int(cur_col)
-        # cool_cols.remove(cur_col)
-        # return cur_col
-        return cool_cols
 
     def shoot(self, row: int, col: int) -> bool:
         # this is checking the board of the player who's being shot at (ie not the player in the current turn)
@@ -136,34 +113,13 @@ class SearchDestroyAI(AIPlayer):
                     ship.got_hit(self.name)
                     return True
 
-    '''
-    senf help thank
-    def hit_list(self, row, col):
-        row_hitList = []
-        col_hitList = []
 
-        if self.board.is_in_bounds(row, col - 1): #and row in self.row_list and (col - 1) in self.col_list:
-            self.row_hitList.append(row)
-            self.col_hitList.append(col - 1)
-        if self.board.is_in_bounds(row - 1, col): #and (row - 1) in self.row_list and col in self.col_list:
-            self.row_hitList.append(row - 1)
-            self.col_hitList.append(col)
-        if self.board.is_in_bounds(row, col + 1): #and row in self.row_list and (col + 1) in self.col_list:
-            self.row_hitList.append(row)
-            self.col_hitList.append(col + 1)
-        if self.board.is_in_bounds(row + 1, col): #and (row + 1) in self.row_list and col in self.col_list:
-            self.row_hitList.append(row + 1)
-            self.col_hitList.append(col)
-        hit_coords = list(zip(self.row_hitList, self.col_hitList))
-        # print(hit_coords)
-        return hit_coords
-    '''
 
     def turn(self, other_player):
         # row_hitList = self.row_hitList
         # col_hitList = self.col_hitList
         # hit_coords = self.hit_this
-        stole_their_coords = self.ship_coords
+        stole_their_coords = other_player.stealin_my_coords()
         self.get_player_board()
         if self.hit_coords:
             # return and remove first row element from list
@@ -181,13 +137,13 @@ class SearchDestroyAI(AIPlayer):
             # remove same col element from og list of coords
             # self.col_list.remove(cur_col)
 
-            self.ship_coords.remove(cur_coords)
+            self.stealin_my_coords().remove(cur_coords)
             # print(self.hit_coords)
 
         else:
             # stole_their_coords = self.ship_coords
             cur_coords = random.choice(stole_their_coords)
-            self.ship_coords.remove(cur_coords)
+            self.stealin_my_coords().remove(cur_coords)
 
             row = cur_coords[0]
             col = cur_coords[1]

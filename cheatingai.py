@@ -73,45 +73,9 @@ class CheatingAI(AIPlayer):
         super().get_ship_placement()
 
     def stealin_my_coords(self):
-        ship_row_coords = []
-        ship_col_coords = []
+        super().stealin_my_coords()
 
-        # ship_coords = []
-        for row in range(self.board.rows):
-            for col in range(self.board.cols):
-                if self.board.contents[1][row][col] != '*':
-                    # row = int(row)
-                    # col = int(col)
-                    # ship_coords.append(Coordinates(row, col))
 
-                    ship_row_coords.append(row)
-                    ship_col_coords.append(col)
-        ship_coords = list(zip(ship_row_coords, ship_col_coords))
-        print(ship_coords)
-        return ship_coords
-
-    # these are creating a new list and so they're returning the same value every time
-    # if we return rad_rows.pop(0)
-    # so gotta add it to the constructor
-    def stolen_rows(self):
-        took_their_coords = self.stealin_my_coords()
-        rad_rows = []
-        for i in took_their_coords:
-            row = i[0]
-            row = int(row)
-            rad_rows.append(row)
-        return rad_rows
-        # return rad_rows.pop(0)
-
-    def stolen_cols(self):
-        took_their_coords = self.stealin_my_coords()
-        cool_cols = []
-        for i in took_their_coords:
-            col = i[1]
-            col = int(col)
-            cool_cols.append(col)
-        return cool_cols
-        # return cool_cols.pop(0)
 
 
     def shoot(self, row: int, col: int) -> bool:
@@ -124,8 +88,9 @@ class CheatingAI(AIPlayer):
 
     def turn(self, other_player):
         self.get_player_board()
+        loser = other_player.stealin_my_coords()
 
-        stole_their_coords = other_player.ship_coords
+        stole_their_coords = loser
         print(stole_their_coords)
         cur_coords = stole_their_coords.pop(0)
         # self.ship_coords.remove(cur_coords)
