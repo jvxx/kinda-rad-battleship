@@ -73,32 +73,36 @@ class CheatingAI(AIPlayer):
         super().get_ship_placement()
 
     def stealin_my_coords(self):
-        super().stealin_my_coords()
+        return super().stealin_my_coords()
 
-
+    def random_coords(self):
+        return super().random_coords()
 
 
     def shoot(self, row: int, col: int) -> bool:
-        ship_initial = self.board.contents[1][row][col]
-        for ship in self.ship_list:
-            if ship.name[0] == ship_initial:
-                self.board.contents[1][row][col] = 'X'
-                ship.got_hit(self.name)
-                return True
+        if self.board.contents[1][row][col] == '*':
+            self.board.contents[1][row][col] = 'O'
+            return False
+        else:
+            ship_initial = self.board.contents[1][row][col]
+            for ship in self.ship_list:
+                if ship.name[0] == ship_initial:
+                    self.board.contents[1][row][col] = 'X'
+                    ship.got_hit(self.name)
+                    return True
 
     def turn(self, other_player):
         self.get_player_board()
-        loser = other_player.stealin_my_coords()
 
-        stole_their_coords = loser
-        print(stole_their_coords)
+        stole_their_coords = other_player.stolen_coords
+        # print(stole_their_coords)
         cur_coords = stole_their_coords.pop(0)
         # self.ship_coords.remove(cur_coords)
 
         row = cur_coords[0]
         col = cur_coords[1]
 
-        print(row, col)
+        # print(row, col)
 
         hit = other_player.shoot(row, col)
         if hit:

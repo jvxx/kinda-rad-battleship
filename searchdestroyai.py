@@ -74,7 +74,7 @@ class SearchDestroyAI(AIPlayer):
         super().get_ship_placement()
 
     def stealin_my_coords(self):
-        super().stealin_my_coords()
+        return super().stealin_my_coords()
 
     def random_coords(self):
         ship_row_coords = []
@@ -101,10 +101,6 @@ class SearchDestroyAI(AIPlayer):
         if self.board.contents[1][row][col] == '*':
             self.board.contents[1][row][col] = 'O'
             return False
-        elif self.board.contents[1][row][col] == 'X':
-            return False
-        elif self.board.contents[1][row][col] == 'O':
-            return False
         else:
             ship_initial = self.board.contents[1][row][col]
             for ship in self.ship_list:
@@ -119,7 +115,7 @@ class SearchDestroyAI(AIPlayer):
         # row_hitList = self.row_hitList
         # col_hitList = self.col_hitList
         # hit_coords = self.hit_this
-        stole_their_coords = other_player.stealin_my_coords()
+        stole_their_coords = other_player.random_coords
         self.get_player_board()
         if self.hit_coords:
             # return and remove first row element from list
@@ -137,13 +133,13 @@ class SearchDestroyAI(AIPlayer):
             # remove same col element from og list of coords
             # self.col_list.remove(cur_col)
 
-            self.stealin_my_coords().remove(cur_coords)
+            stole_their_coords.remove(cur_coords)
             # print(self.hit_coords)
 
         else:
             # stole_their_coords = self.ship_coords
             cur_coords = random.choice(stole_their_coords)
-            self.stealin_my_coords().remove(cur_coords)
+            stole_their_coords.remove(cur_coords)
 
             row = cur_coords[0]
             col = cur_coords[1]
@@ -184,24 +180,6 @@ class SearchDestroyAI(AIPlayer):
             # print(self.hit_coords)
 
 
-
-            # dude = self.hit_list(row, col)
-            # print(dude)
-
-
-            # check if in bounds and add coords to hit list
-            # if self.board.is_in_bounds(row, col - 1) and row in self.row_list and (col - 1) in self.col_list:
-            #     row_hitList.append(row)
-            #     col_hitList.append(col-1)
-            # if self.board.is_in_bounds(row - 1, col) and (row - 1) in self.row_list and col in self.col_list:
-            #     row_hitList.append(row-1)
-            #     col_hitList.append(col)
-            # if self.board.is_in_bounds(row, col + 1) and row in self.row_list and (col + 1) in self.col_list:
-            #     row_hitList.append(row)
-            #     col_hitList.append(col + 1)
-            # if self.board.is_in_bounds(row + 1, col) and (row + 1) in self.row_list and col in self.col_list:
-            #     row_hitList.append(row+1)
-            #     col_hitList.append(col)
         else:
             self.board.contents[0][row][col] = 'O'
             print('Miss')

@@ -12,6 +12,8 @@ from copy import deepcopy
 class AIPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
+        self.stolen_coords = self.stealin_my_coords()
+        self.random_coords = self.random_coords()
         # self.ship_coords = self.stealin_my_coords()
         # self.row_list = self.stolen_rows()
         # self.col_list = self.stolen_cols()
@@ -31,9 +33,21 @@ class AIPlayer(Player):
                     ship_row_coords.append(row)
                     ship_col_coords.append(col)
         ship_coords = list(zip(ship_row_coords, ship_col_coords))
+        # print(ship_coords)
         return ship_coords
 
+    def random_coords(self):
+        ship_row_coords = []
+        ship_col_coords = []
 
+        # ship_coords = []
+        for row in range(self.board.rows):
+            for col in range(self.board.cols):
+                ship_row_coords.append(row)
+                ship_col_coords.append(col)
+        ship_coords = list(zip(ship_row_coords, ship_col_coords))
+        # print(ship_coords)
+        return ship_coords
 
     # def get_ship_orient(self, ship) -> str:
     #     # is_horiz = random.randint(0, 1)
