@@ -13,11 +13,9 @@ class Game(object):
         random.seed(random_seed)
         self.row = row
         self.col = col
-        # self.player_board = Player.get_player_board(self)
         self.players = []
         for player_num in range(1, 3):
             self.players.append(self.get_player_type(self.players, row, col, player_num, blank_char))
-            # self.which_player = Player.get_player_type(player_num)
         self._cur_player_turn = 0
 
     def get_player_type(self, otherPlayers, row, col, playerNum: int, blank_char):
@@ -44,7 +42,6 @@ class Game(object):
     @property
     def cur_player(self) -> get_player_type:
         return self.players[self._cur_player_turn]
-
 
     def play(self):
         while not self.game_over():

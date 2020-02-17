@@ -1,7 +1,4 @@
-import sys
-from typing import Iterable
-from board import Board
-from ship import Ship
+from typing import Iterable, List
 from player import Player
 
 
@@ -9,8 +6,11 @@ class HumanPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
 
-
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
+        """
+        take their name and player number--
+        asking for someone's number is just this easy!
+        """
         taken_names = set([player.name for player in other_players])
         while True:
             name = input(
@@ -24,18 +24,13 @@ class HumanPlayer(Player):
                 )
 
     def get_player_ship(self):
-        ship_list = []
-        with open(sys.argv[1]) as fil:
-            for s in fil.readlines()[1:]:
-                s = s.split(' ')
-                ship_name = s[0]
-                ship_length = int(s[1])
-                ship_list.append(Ship(ship_name, ship_length))
-
-            return ship_list
+        return super().get_player_ship()
 
     def get_ship_orient(self, ship) -> str:
-        # ship orientation: horizontal or vertical
+        """
+        ask how they'd like their ship to be oriented.
+        check if it's a valid input and orientation.
+        """
         while True:
             ship_orientation = input(
                 f'{self} enter horizontal or vertical for the orientation of {ship.name} which is {ship.length} long: '
@@ -57,60 +52,42 @@ class HumanPlayer(Player):
                 )
 
     def initial_player_board(self):
-        # for placing ships
-        for i in range(2):
-            if i == 0:
-                pass
-            elif i == 1:
-                print(f"{self.name}'s Placement Board")
-                print(" ", end='')
-                for col_num in range(self.col):
-                    print(" " + str(col_num), end='')
-                print()
-                for row_num in range(self.row):
-                    print(row_num, end='')
-                    for col_num in range(self.col):
-                        print(" " + self.board.contents[i][row_num][col_num], end='')
-                    print()
+        super().initial_player_board()
 
     def get_player_board(self):
-        # for shooting ships
-        for i in range(2):
-            if i == 0:
-                print(f"{self}'s Scanning Board")
-            elif i == 1:
-                print(f"{self}'s Board")
-            print(" ", end='')
-            for col_num in range(self.col):
-                print(" " + str(col_num), end='')
-            print()
-            for row_num in range(self.row):
-                print(row_num, end='')
-                for col_num in range(self.col):
-                    print(" " + self.board.contents[i][row_num][col_num], end='')
-                print()
-            print()
+        super().get_player_board()
 
     def get_ship_placement(self):
-        # WE NEED THE PLACEMENT BOARD HERE
+        """
+        iterating through list of ships and placing them down
+
+        unfortunately, unlike AI, humans are imperfect and we'll need to check if:
+        a) their coordinates are in the right format so we can parse it
+        b) if every coordinate the ship will be on is valid
+        """
+
         self.initial_player_board()
 
-        # iterate through ship list and place each ship
+        """
+        iterate through ship list and place each ship
+        """
         for ship in self.ship_list:
             valid_input = 0
+
+            """
+            valid_input counter with while loop to track if each requirement is met
+            """
             while valid_input < 3:
-
-                # retrieve orientation of the ship
                 is_horiz = self.get_ship_orient(ship)
-
                 place_ship = input(
                     f'{self}, enter the starting position for your {ship.name} ship ,which is {ship.length} long, in the form row, column: '
                 )
 
-                # to track if each requirement is met for a valid input
                 valid_input = 0
 
-                # determine validity of user input of coordinates
+                """
+                a) determine if user input of coordinates is the correct format
+                """
                 try:
                     row, col = place_ship.split(',')
                     valid_input += 1
@@ -140,7 +117,9 @@ class HumanPlayer(Player):
                     )
                     continue
 
-                # to check if each and every coordinate the ship will be on is valid
+                """
+                b) to check if each and every coordinate the ship will be on is valid
+                """
                 fake_col = col
                 fake_row = row
                 for ship_length in range(ship.length):
@@ -175,20 +154,19 @@ class HumanPlayer(Player):
                             )
                             break
 
-                    # if is_horiz is True:
-                    #     fake_col += 1
-                    # else:
-                    #     fake_row += 1
-                    # else:
-
-                    # incrementing by 1 to check every coordinate the ship will be on
+                    """
+                    incrementing by 1 to check every coordinate the ship will be on;
+                    we'll go through all the coordinates the ship will be on
+                    """
                     if is_horiz == 'horizontal':
                         fake_col += 1
                     elif is_horiz == 'vertical':
                         fake_row += 1
 
-            # once all the coordinates and placements are confirmed to be valid,
-            # place the ship's initials to mark the ship on the board
+            """
+            once all the coordinates and placements are confirmed to be valid,
+            place the ship's initials to mark the ship on the board
+            """
             for ship_length in range(ship.length):
                 self.board.contents[1][row][col] = ship.name[0]
                 if is_horiz == 'horizontal':
@@ -199,26 +177,7 @@ class HumanPlayer(Player):
             self.initial_player_board()
 
     def shoot(self, row: int, col: int) -> bool:
-        # this is checking the board of the player who's being shot at (ie not the player in the current turn)
-
-        # check if the coordinates contains a ship,
-        # and return False if there is no ship
-        # if there is a ship,
-        # look up which ship the initials correspond to, mark an X, and return True
-        if self.board.contents[1][row][col] == '*':
-            self.board.contents[1][row][col] = 'O'
-            return False
-        elif self.board.contents[1][row][col] == 'X':
-            return False
-        elif self.board.contents[1][row][col] == 'O':
-            return False
-        else:
-            ship_initial = self.board.contents[1][row][col]
-            for ship in self.ship_list:
-                if ship.name[0] == ship_initial:
-                    self.board.contents[1][row][col] = 'X'
-                    ship.got_hit(self.name)
-                    return True
+        super().shoot(row, col)
 
     def turn(self, other_player):
         self.get_player_board()
@@ -227,7 +186,9 @@ class HumanPlayer(Player):
             valid_input = 0
             shoot_me = input(f'{self}, enter the location you want to fire at in the form row, column: ')
 
-            # check validity of shooting coordinates format
+            """
+            check if input of shooting coordinates is correct format
+            """
             try:
                 row, col = shoot_me.split(',')
                 valid_input += 1
@@ -255,7 +216,9 @@ class HumanPlayer(Player):
                 )
                 continue
 
-            # check validity of coordinates
+            """
+            check validity of coordinates
+            """
             if not self.board.is_in_bounds(row, col):
                 valid_input = 0
                 print(
@@ -273,9 +236,14 @@ class HumanPlayer(Player):
                     f'You have already fired at {row}, {col}.'
                 )
 
+        """
+        now shoot at the other player
+        """
         hit = other_player.shoot(row, col)
 
-        # mark scanning boards accordingly
+        """
+        mark scanning boards accordingly if everything goes well
+        """
         if hit:
             self.board.contents[0][row][col] = 'X'
         else:
@@ -285,5 +253,4 @@ class HumanPlayer(Player):
         self.get_player_board()
 
     def __str__(self) -> str:
-        # convert player name from weird object thing to str
-        return self.name
+        return super().__str__()
