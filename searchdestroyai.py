@@ -170,7 +170,7 @@ class SearchDestroyAI(AIPlayer):
             cur_coords = self.hit_coords.pop(0)
             row = cur_coords[0]
             col = cur_coords[1]
-            print(row, col)
+            # print(row, col)
             # row = int(cur_row)
             # remove said row element from original list of coords
             # self.row_list.remove(cur_row)
@@ -182,7 +182,7 @@ class SearchDestroyAI(AIPlayer):
             # self.col_list.remove(cur_col)
 
             self.ship_coords.remove(cur_coords)
-            print(self.hit_coords)
+            # print(self.hit_coords)
 
         else:
             # stole_their_coords = self.ship_coords
@@ -191,7 +191,7 @@ class SearchDestroyAI(AIPlayer):
 
             row = cur_coords[0]
             col = cur_coords[1]
-            print(row, col)
+            # print(row, col)
 
 
 
@@ -225,7 +225,7 @@ class SearchDestroyAI(AIPlayer):
                     self.hit_coords.append(bottom_coords)
                 # self.row_hitList.append(row + 1)
                 # self.col_hitList.append(col)
-            print(self.hit_coords)
+            # print(self.hit_coords)
 
 
 

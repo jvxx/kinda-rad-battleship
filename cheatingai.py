@@ -87,7 +87,7 @@ class CheatingAI(AIPlayer):
                     ship_row_coords.append(row)
                     ship_col_coords.append(col)
         ship_coords = list(zip(ship_row_coords, ship_col_coords))
-        # print(ship_coords)
+        print(ship_coords)
         return ship_coords
 
     # these are creating a new list and so they're returning the same value every time
@@ -124,10 +124,17 @@ class CheatingAI(AIPlayer):
 
     def turn(self, other_player):
         self.get_player_board()
-        row = other_player.row_list.pop(0)
-        col = other_player.col_list.pop(0)
-        # print(row)
-        # print(col)
+
+        stole_their_coords = other_player.ship_coords
+        print(stole_their_coords)
+        cur_coords = stole_their_coords.pop(0)
+        # self.ship_coords.remove(cur_coords)
+
+        row = cur_coords[0]
+        col = cur_coords[1]
+
+        print(row, col)
+
         hit = other_player.shoot(row, col)
         if hit:
             self.board.contents[0][row][col] = 'X'

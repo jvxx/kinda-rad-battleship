@@ -129,9 +129,9 @@ class RandomAI(AIPlayer):
     def turn(self, other_player):
         self.get_player_board()
 
-        stole_their_coords = self.ship_coords
+        stole_their_coords = other_player.ship_coords
         cur_coords = random.choice(stole_their_coords)
-        self.ship_coords.remove(cur_coords)
+        other_player.ship_coords.remove(cur_coords)
 
         row = cur_coords[0]
         col = cur_coords[1]
