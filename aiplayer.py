@@ -1,13 +1,11 @@
 import random
-from typing import Iterable, List, Tuple
+from typing import Iterable
 from player import Player
 
 
 class AIPlayer(Player):
     def __init__(self, other_players: Iterable["Player"], row, col, player_num: int, blank_char: str = '*') -> None:
         super().__init__(other_players, row, col, player_num, blank_char)
-        self.stolen_coords = self.stealin_my_coords()
-        self.random_coords = self.random_coords()
 
     def get_ship_placement(self):
         """
@@ -68,32 +66,4 @@ class AIPlayer(Player):
                     row += 1
             self.initial_player_board()
 
-    def stealin_my_coords(self) -> List[Tuple[int, int]]:
-        """
-        this is a list of all the coordinates my ships are on,
-        and you're taking them away from me!!! :(
-        """
-        ship_row_coords = []
-        ship_col_coords = []
 
-        for row in range(self.board.rows):
-            for col in range(self.board.cols):
-                if self.board.contents[1][row][col] != '*':
-                    ship_row_coords.append(row)
-                    ship_col_coords.append(col)
-        ship_coords = list(zip(ship_row_coords, ship_col_coords))
-        return ship_coords
-
-    def random_coords(self) -> List[Tuple[int, int]]:
-        """
-        list of all possible coordinates from the board
-        """
-        ship_row_coords = []
-        ship_col_coords = []
-        for row in range(self.board.rows):
-            for col in range(self.board.cols):
-                ship_row_coords.append(row)
-                ship_col_coords.append(col)
-        ship_coords = list(zip(ship_row_coords, ship_col_coords))
-
-        return ship_coords

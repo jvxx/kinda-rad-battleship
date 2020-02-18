@@ -176,8 +176,14 @@ class HumanPlayer(Player):
 
             self.initial_player_board()
 
+    def stealin_my_coords(self):
+        return super().stealin_my_coords()
+
+    def random_coords(self):
+        return super().random_coords()
+
     def shoot(self, row: int, col: int) -> bool:
-        super().shoot(row, col)
+        return super().shoot(row, col)
 
     def turn(self, other_player):
         self.get_player_board()

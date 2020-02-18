@@ -1,6 +1,5 @@
 import sys
-from typing import List
-from typing import Iterable
+from typing import Iterable, List, Tuple
 from board import Board
 from ship import Ship
 
@@ -16,6 +15,8 @@ class Player(abc.ABC):
         self.name = self.get_player_name(player_num, other_players)
         self.ship_list = self.get_player_ship()
         self.ship_placement = self.get_ship_placement()
+        self.stolen_coords = self.stealin_my_coords()
+        self.random_coords = self.random_coords()
 
     @abc.abstractmethod
     def get_player_name(self, playerNum: int, other_players: Iterable['Player']) -> str:
@@ -79,6 +80,36 @@ class Player(abc.ABC):
     @abc.abstractmethod
     def get_ship_placement(self):
         ...
+
+    def stealin_my_coords(self) -> List[Tuple[int, int]]:
+        """
+        this is a list of all the coordinates my ships are on,
+        and you're taking them away from me!!! :(
+        """
+        ship_row_coords = []
+        ship_col_coords = []
+
+        for row in range(self.board.rows):
+            for col in range(self.board.cols):
+                if self.board.contents[1][row][col] != '*':
+                    ship_row_coords.append(row)
+                    ship_col_coords.append(col)
+        ship_coords = list(zip(ship_row_coords, ship_col_coords))
+        return ship_coords
+
+    def random_coords(self) -> List[Tuple[int, int]]:
+        """
+        list of all possible coordinates from the board
+        """
+        ship_row_coords = []
+        ship_col_coords = []
+        for row in range(self.board.rows):
+            for col in range(self.board.cols):
+                ship_row_coords.append(row)
+                ship_col_coords.append(col)
+        ship_coords = list(zip(ship_row_coords, ship_col_coords))
+
+        return ship_coords
 
     def shoot(self, row: int, col: int) -> bool:
         """
